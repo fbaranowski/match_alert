@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from .models import League
+from home.models import League
 
 
 # delete after implementing views for particular leagues

@@ -89,7 +89,13 @@ small {
     text-transform: none;
 }
 
-/****************** NAVIGATION ******************/
+.account-info {
+    float: left;
+}
+
+.account-heading {
+    color: #a2ed56;
+}
 
 nav {
     background: #e5e5e5;

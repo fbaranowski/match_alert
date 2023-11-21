@@ -1,0 +1,26 @@
+{% extends 'home/base.html' %}
+
+{% block nav %}
+    {% for league in leagues %}
+        <li><a class="dropdown-item" href="{% url league.href_str %}">{{ league.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="content-section">
+        <img class="rounded-circle account-img" src="{{ profile.image.url }}" style="width:200px;height:200px;margin-bottom:50px;">
+
+        <div class="account-info" style="margin-right:250px">
+            <h2 class="account-heading" style="text-align:center;color:#a2ed56;font-size:2.5rem;margin-top:10px;">{{ profile.user.username }}</h2>
+            <p>E-mail: {{ user.email }}</p>
+            <p>Full name: {{ user.first_name }} {{ user.last_name }}</p>
+        </div>
+
+        <div class="border-top pt-3">
+        <small>
+            <a class="ml-2" href="{% url 'update_profile' user.pk %}">Update Profile</a>
+        </small>
+        </div>
+
+    </div>
+{% endblock %}
