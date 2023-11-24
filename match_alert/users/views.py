@@ -4,9 +4,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from users.forms import UserRegisterForm
 from home.models import League
-from django.contrib.auth.views import LoginView, LogoutView, TemplateView
+from django.contrib.auth import views as auth_views
 from django.contrib import messages
-from users.models import Profile
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from users.forms import UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.models import User
@@ -25,7 +24,7 @@ class RegisterView(SuccessMessageMixin, CreateView):
         return context
 
 
-class CustomLoginView(SuccessMessageMixin, LoginView):
+class CustomLoginView(SuccessMessageMixin, auth_views.LoginView):
     template_name = "users/login.html"
     success_url = reverse_lazy("home")
     success_message = "You have been successfully logged in!"
@@ -40,57 +39,12 @@ class CustomLoginView(SuccessMessageMixin, LoginView):
         return redirect("login")
 
 
-class CustomLogoutView(LogoutView):
+class CustomLogoutView(auth_views.LogoutView):
     template_name = "users/logout.html"
     extra_context = {"leagues": League.objects.all()}
 
 
-# class ProfileView(View, LoginRequiredMixin, UserPassesTestMixin):
-#     template_name = 'users/update_profile.html'
-#     user_form_class = UserUpdateForm
-#     profile_form_class = ProfileUpdateForm
-#     initial = {"key": "value"}
-#     model = Profile
-#
-#     def get(self, request, *args, **kwargs):
-#         user_form = self.user_form_class(initial=self.initial)
-#         profile_form = self.profile_form_class(initial=self.initial)
-#         return render(request, self.template_name,
-#                       {"user_form": user_form, "profile_form": profile_form})
-#
-#     def post(self, request, *args, **kwargs):
-#         user_form = self.user_form_class(request.POST)
-#         profile_form = self.profile_form_class(request.POST)
-#
-#         if user_form.is_valid() and profile_form.is_valid():
-#             user_form.save()
-#             profile_form.save()
-#             messages.success(request, "Your profile has been updated")
-#             return redirect('home')
-#
-# return render(request, self.template_name,
-#               {"user_form": user_form, "profile_form": profile_form})
-#
-#     def test_func(self):
-#         profile = self.get_object()
-#         return self.request.user == profile.user
-
-
-# class ProfileUpdateView(LoginRequiredMixin, UpdateView):
-#     model = User
-#     fields = ['username', 'email']
-#     context_object_name = 'user'
-#     template_name = 'users/update_profile.html'
-#     success_url = '/'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(ProfileUpdateView, self).get_context_data(**kwargs)
-#         context['profile'] = Profile.objects.get(pk=self.request.user.id).image
-#         context['leagues'] = League.objects.all()
-#         return context
-
-
-class ProfileView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class ProfileView(LoginRequiredMixin, UserPassesTestMixin, auth_views.TemplateView):
     template_name = "users/profile.html"
 
     def get_context_data(self, **kwargs):
@@ -110,7 +64,9 @@ class ProfileView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         return redirect("home")
 
 
-class ProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class ProfileUpdateView(
+    LoginRequiredMixin, UserPassesTestMixin, auth_views.TemplateView
+):
     template_name = "users/update_profile.html"
 
     def get_context_data(self, **kwargs):
@@ -126,7 +82,6 @@ class ProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         pk = self.kwargs["pk"]
         user = get_object_or_404(User, pk=pk)
         user_form = UserUpdateForm(request.POST, instance=user)
-        get_object_or_404(Profile, user__pk=pk)
         profile_form = ProfileUpdateForm(
             request.POST, request.FILES, instance=user.profile
         )
@@ -148,3 +103,46 @@ class ProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     def handle_no_permission(self):
         messages.error(self.request, "You have no access to this page")
         return redirect("home")
+
+
+class CustomPasswordResetView(auth_views.PasswordResetView):
+    template_name = "users/reset_password.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["leagues"] = League.objects.all()
+        return context
+
+
+class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = "users/password_reset_sent.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["leagues"] = League.objects.all()
+        return context
+
+
+class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = "users/password_reset_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["leagues"] = League.objects.all()
+        return context
+
+
+class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = "users/password_reset_done.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["leagues"] = League.objects.all()
+        return context
+
+
+class CustomPasswordChangeView(SuccessMessageMixin, auth_views.PasswordChangeView):
+    template_name = "users/change_password.html"
+    extra_context = {"leagues": League.objects.all()}
+    success_url = reverse_lazy("home")
+    success_message = "Your password has been changed"
