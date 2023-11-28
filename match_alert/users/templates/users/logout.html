@@ -1,0 +1,18 @@
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+{% block nav %}
+    {% for league in leagues %}
+        <li><a class="dropdown-item" href="{% url league.href_str %}">{{ league.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="content-section">
+    <p>You have been logged out</p>
+    <div class="border-top pt-3">
+        <small>
+            Log in again? <a class="ml-2" href="{% url 'login' %}">Click here</a>
+        </small>
+    </div>
+</div>
+{% endblock %}
