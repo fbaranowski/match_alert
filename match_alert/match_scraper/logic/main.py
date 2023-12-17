@@ -3,7 +3,10 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import (
+    StaleElementReferenceException,
+    NoSuchElementException,
+)
 import re
 
 
@@ -22,32 +25,32 @@ class TableLabels:
     form: str = "Form"
 
 
-@dataclass
 class WebsiteAttributes:
-    table_class_name = "LeagueTable_leagueTable__6QbXM"
-    button_class_name = "football-matches__show-more"
-    fixtures_results_container_class = "football-matches__container"
+    TABLE_CLASS_NAME = "LeagueTable_leagueTable__6QbXM"
+    BUTTON_CLASS_NAME = "football-matches__show-more"
+    FIXTURES_RESULTS_CONTAINER_CLASS = "football-matches__container"
+    LEAGUE_CLASS_NAME = "football-matches__heading"
+    TEAMS_LIST_CLASS = "dcr-12fqtb6"
+    LEAGUE_CONTAINER_ID = {
+        "premier_league": "container-premier-league",
+        "la_liga": "container-la-liga",
+        "bundesliga": "container-bundesliga",
+        "serie_a": "container-serie-a",
+        "ligue_1": "container-la-liga",
+    }
 
 
-@dataclass
 class RegexPatterns:
-    date_regex = r"([A-z]+\s\d{1,}\s[A-z]+\s\d{4})"
-    games_regex = r"(\d{2}\D\d{2}\s.*?)(?=\s\d|$)"
+    DATE_REGEX = r"([A-z]+\s\d{1,}\s[A-z]+\s\d{4})"
+    GAMES_REGEX = r"(\d{2}\D\d{2}\s.*?)(?=\s\d|$)"
+    FORM_COLUMN_REGEX = r"\b(Won|Drew|Lost)\s*(\w)?"
+    MATCH_TIME_REGEX = r"(\d{2}\D\d{2}\s)"
+    FIXTURE_TEAMS_REGEX = r"[A-z]+(?=\n)|[A-z]+\s[A-z]+(?=\n)"
+    RESULT_TEAMS_REGEX = r"[A-z]+\s[A-z]+(?=\s)|[A-z]+(?=\s)"
 
 
-@dataclass
-class TableLeagueNames:
-    premier_league = "premier-league"
-    la_liga = "primera-division"
-    bundesliga = "bundesliga"
-    serie_a = "serie-a"
-    ligue_1 = "ligue-1"
-
-
-@dataclass
-class FixturesResultsParams:
-    # better dictionaries or fields? Or maybe dict with 2 element lists?
-    league_url = {
+class UrlsParams:
+    league_name_url = {
         "premier_league": "premierleague",
         "la_liga": "laligafootball",
         "bundesliga": "bundesligafootball",
@@ -55,47 +58,41 @@ class FixturesResultsParams:
         "ligue_1": "ligue1football",
     }
 
-    league_to_split = {
-        "premier_league": "Premier League",
-        "la_liga": "La Liga",
-        "bundesliga": "Bundesliga",
-        "serie_a": "Serie A",
-        "ligue_1": "Ligue 1",
-    }
-
-    premier_league_url = "premierleague"
-    la_liga_url = "laligafootball"
-    bundesliga_url = "bundesligafootball"
-    serie_a_url = "serieafootball"
-    ligue_1_url = "ligue1football"
-
-    premier_league_split = "Premier League"
-    la_liga_split = "La Liga"
-    bundesliga_split = "Bundesliga"
-    serie_a_split = "Serie A"
-    ligue_1_split = "Ligue 1"
-
 
 class Scraper:
     @staticmethod
-    def get_table(league_name: str) -> list:
-        """
-        Function which scrapes league tables
-        url parameter should be 'https://talksport.com/football/<league_name>/table'
-        """
-        full_table = []
-        response = requests.get(f"https://talksport.com/football/{league_name}/table")
+    def get_teams(league_container: str):
+        response = requests.get("https://www.theguardian.com/football/teams")
         soup = BeautifulSoup(response.content, "html.parser")
 
-        scraped_table = soup.find(
-            "table", {"class": WebsiteAttributes.table_class_name}
+        league = soup.find("div", {"id": league_container})
+        teams = league.find_all("li", class_=WebsiteAttributes.TEAMS_LIST_CLASS)
+        teams_list = []
+        for team in teams:
+            teams_list.append(team.text)
+        return teams_list
+
+    @staticmethod
+    def get_table2(league_name: str) -> list:
+        """
+        Function which scrapes league tables
+        url parameter should be 'https://theguardian.com/football/<league_name>/table'
+        """
+        full_table = []
+        response = requests.get(
+            f"https://www.theguardian.com/football/{league_name}/table"
         )
+        soup = BeautifulSoup(response.content, "html.parser")
+
+        scraped_table = soup.find("table", {"class": "table"})
 
         for row in scraped_table.tbody.find_all("tr"):
-            # team = []
             columns = row.find_all("td")
-            # for column in columns:
-            # team.append(column.text.strip())
+
+            form_column = re.findall(RegexPatterns.FORM_COLUMN_REGEX, columns[10].text)
+            form_words = [element[0][0] for element in form_column]
+            form_first_letters = "".join(form_words)
+
             team = TableLabels(
                 position=columns[0].text.strip(),
                 team=columns[1].text.strip(),
@@ -103,84 +100,116 @@ class Scraper:
                 won=columns[3].text.strip(),
                 drew=columns[4].text.strip(),
                 lost=columns[5].text.strip(),
-                goal_difference=columns[6].text.strip(),
-                points=columns[7].text.strip(),
-                form=columns[8].text.strip(),
+                goals_for=columns[6].text.strip(),
+                goals_against=columns[7].text.strip(),
+                goal_difference=columns[8].text.strip(),
+                points=columns[9].text.strip(),
+                form=form_first_letters,
             )
             full_table.append(team)
-
         return full_table
 
     @staticmethod
-    def get_results(url_league_name: str, league_name_for_split: str) -> list:
+    def get_results(url_league_name: str) -> list:
         """
         Function which scrapes league results from given url
-        league_name argument is necessary for proper splitting scraped result into list
         """
         options = webdriver.FirefoxOptions()
         options.add_argument("-headless")
         driver = webdriver.Firefox(options=options)
         driver.get(f"https://www.theguardian.com/football/{url_league_name}/results")
 
-        button = driver.find_element(By.CLASS_NAME, WebsiteAttributes.button_class_name)
+        button = driver.find_element(By.CLASS_NAME, WebsiteAttributes.BUTTON_CLASS_NAME)
         for i in range(2):
             button.click()
 
-        scraped_results = driver.find_element(
-            By.CLASS_NAME, WebsiteAttributes.fixtures_results_container_class
+        league_name = driver.find_element(
+            By.CLASS_NAME, WebsiteAttributes.LEAGUE_CLASS_NAME
         ).text
+
+        scraped_results = driver.find_element(
+            By.CLASS_NAME, WebsiteAttributes.FIXTURES_RESULTS_CONTAINER_CLASS
+        ).text
+
         driver.close()
 
         raw_results = re.sub(r"\nFT", " ", scraped_results)
         raw_results = re.sub(r"\n", " ", raw_results)
-        split_results = re.split(f"{league_name_for_split}", raw_results)
+        split_results = re.split(f"{league_name}", raw_results)
+        split_results.pop(-1)
 
         final_results = []
         for result in split_results:
             days = re.split(r"\s\s", result)
             formatted_day = [day.strip() for day in days]
-            final_results.append(formatted_day)
 
-        final_results.pop(-1)
+            date = formatted_day[0]
+
+            for i in range(1, len(formatted_day)):
+                teams = re.findall(RegexPatterns.RESULT_TEAMS_REGEX, formatted_day[i])
+                goals = re.findall(r"\d", formatted_day[i])
+                res_dict = {
+                    "date": date,
+                    "team1": teams[0],
+                    "score1": goals[0],
+                    "team2": teams[1],
+                    "score2": goals[1],
+                }
+                final_results.append(res_dict)
+
         return final_results
 
     @staticmethod
-    def get_fixtures(url_league_name: str, league_name_for_split: str) -> list:
+    def get_fixtures(url_league_name: str) -> list:
         """
         Function which scrapes league fixtures from given url
-        league_name argument is necessary for proper splitting scraped result into list
         """
         options = webdriver.FirefoxOptions()
         options.add_argument("-headless")
         driver = webdriver.Firefox(options=options)
         driver.get(f"https://www.theguardian.com/football/{url_league_name}/fixtures")
 
-        button = driver.find_element(By.CLASS_NAME, WebsiteAttributes.button_class_name)
+        try:
+            button = driver.find_element(
+                By.CLASS_NAME, WebsiteAttributes.BUTTON_CLASS_NAME
+            )
+        except NoSuchElementException:
+            button = None
+
         while button:
             try:
                 button.click()
             except StaleElementReferenceException:
                 break
 
-        scraped_fixtures = driver.find_element(
-            By.CLASS_NAME, WebsiteAttributes.fixtures_results_container_class
+        league_name = driver.find_element(
+            By.CLASS_NAME, WebsiteAttributes.LEAGUE_CLASS_NAME
         ).text
+
+        scraped_fixtures = driver.find_element(
+            By.CLASS_NAME, WebsiteAttributes.FIXTURES_RESULTS_CONTAINER_CLASS
+        ).text
+
         driver.close()
 
-        raw_fixtures = re.sub(r"\n", " ", scraped_fixtures)
-        split_fixtures = re.split(f"{league_name_for_split}", raw_fixtures)
+        raw_fixtures = re.sub(r"CET|CEST|GMT|BST", " ", scraped_fixtures)
+        split_fixtures = re.split(f"{league_name}", raw_fixtures)
+        split_fixtures.pop(-1)
 
         final_fixtures = []
         for fixture in split_fixtures:
-            date_as_list = re.findall(RegexPatterns.date_regex, fixture)
+            date_as_list = re.findall(RegexPatterns.DATE_REGEX, fixture)
             temp = [date for date in date_as_list]
 
-            games = re.findall(RegexPatterns.games_regex, fixture)
-            for game in games:
-                temp.append(game.strip())
-            final_fixtures.append(temp)
+            times = re.findall(RegexPatterns.MATCH_TIME_REGEX, fixture)
+            teams = re.findall(RegexPatterns.FIXTURE_TEAMS_REGEX, fixture)
 
-        final_fixtures.pop(-1)
+            team1, team2 = 0, 1
+            for i in range(len(times)):
+                games = [times[i], teams[team1], teams[team2]]
+                temp.append(games)
+                team1, team2 = team1 + 2, team2 + 2
+            final_fixtures.append(temp)
         return final_fixtures
 
 
@@ -190,16 +219,16 @@ class Scraper:
 #         # scraping and getting data from Scraper class
 #         # saving the data to DB
 
-print(Scraper.get_table(TableLeagueNames.premier_league))
-print(
-    Scraper.get_results(
-        FixturesResultsParams.league_url["premier_league"],
-        FixturesResultsParams.league_to_split["premier_league"],
-    )
-)
-print(
-    Scraper.get_fixtures(
-        FixturesResultsParams.league_url["premier_league"],
-        FixturesResultsParams.league_to_split["premier_league"],
-    )
-)
+# print(Scraper.get_table(TableLeagueNames.PREMIER_LEAGUE))
+print(Scraper.get_results(UrlsParams.league_name_url["serie_a"]))
+# print(
+#     Scraper.get_fixtures(
+#         UrlsParams.league_name_url["premier_league"]
+#     )
+# )
+# print(Scraper.get_table2(UrlsParams.league_name_url['premier_league']))
+# print(Scraper.get_table2(UrlsParams.league_name_url['la_liga']))
+# print(Scraper.get_table2(UrlsParams.league_name_url['bundesliga']))
+# print(Scraper.get_table2(UrlsParams.league_name_url['serie_a']))
+# print(Scraper.get_table2(UrlsParams.league_name_url['ligue_1']))
+print(Scraper.get_teams(WebsiteAttributes.LEAGUE_CONTAINER_ID["premier_league"]))
