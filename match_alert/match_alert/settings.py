@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "home.apps.HomeConfig",
     "users.apps.UsersConfig",
     "dashboard.apps.DashboardConfig",
-    "match_scraper.apps.MatchScraperConfig",
     "crispy_forms",
     "crispy_bootstrap4",
 ]
