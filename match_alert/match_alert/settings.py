@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "home.apps.HomeConfig",
     "users.apps.UsersConfig",
-    "dashboard.apps.DashboardConfig" "match_scraper.apps.MatchScraperConfig",
+    "dashboard.apps.DashboardConfig",
+    "match_scraper.apps.MatchScraperConfig",
     "crispy_forms",
     "crispy_bootstrap4",
 ]
