@@ -117,9 +117,9 @@ class Scraper:
 
                 result = Result(
                     team_1_name=teams[0].strip(),
-                    team_1_score=goals[0],
+                    team_1_score=int(goals[0]),
                     team_2_name=teams[1].strip(),
-                    team_2_score=goals[1],
+                    team_2_score=int(goals[1]),
                     date=date,
                 )
                 final_results.append(result)
