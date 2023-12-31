@@ -1,4 +1,8 @@
 from django.contrib import admin
-from home.models import League
+from home import models as home
 
-admin.site.register(League)
+admin.site.register(home.League)
+admin.site.register(home.Team)
+admin.site.register(home.Table)
+admin.site.register(home.Fixture)
+admin.site.register(home.Result)
