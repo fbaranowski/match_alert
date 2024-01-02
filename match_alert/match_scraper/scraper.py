@@ -62,7 +62,7 @@ class DatabaseHandler:
         ligue_1_table = Scraper.get_table(UrlsParams.league_name_url["ligue_1"])
 
         for element in premier_league_table:
-            obj, created = home_models.Table.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.update_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -77,7 +77,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.PREMIER_LEAGUE,
             )
         for element in la_liga_table:
-            obj, created = home_models.Table.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.update_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -92,7 +92,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.LA_LIGA,
             )
         for element in bundesliga_table:
-            obj, created = home_models.Table.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.update_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -107,7 +107,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.BUNDESLIGA,
             )
         for element in serie_a_table:
-            obj, created = home_models.Table.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.update_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -122,7 +122,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.SERIE_A,
             )
         for element in ligue_1_table:
-            obj, created = home_models.Table.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.update_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,

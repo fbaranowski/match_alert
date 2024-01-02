@@ -21,7 +21,7 @@ class Team(models.Model):
         return self.name
 
 
-class Table(models.Model):
+class LeagueTable(models.Model):
     position = models.PositiveSmallIntegerField()
     team = models.CharField(max_length=75)
     played = models.PositiveSmallIntegerField()
