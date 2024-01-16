@@ -1,0 +1,30 @@
+{% extends 'home/base.html' %}
+{% load home_extras %}
+{% block nav %}
+    {% for league in leagues %}
+        <li><a class="dropdown-item" href="{% url 'league_teams' slug=league.slug %}">{{ league.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="content-section">
+        <h1>{{ league.name }} Fixtures</h1>
+        <a href="{% url 'league_table' slug=league.slug %}">Table</a> <a href="{% url 'league_results' slug=league.slug %}">Results</a> <a href="{% url 'league_teams' slug=league.slug %}">Teams</a>
+        {% for fixture in fixtures %}
+            {% with next_element=fixtures|next:forloop.counter0 %}
+            <ul>
+                {% if fixture.date == next_element.date %}
+                <li>
+                    <span>{{ fixture.time }} {{ fixture.team_1_name }} vs {{ fixture.team_2_name }}</span>
+                </li>
+                {% else %}
+                <li>
+                    <strong>{{ fixture.date }}</strong><br>
+                    <span>{{ fixture.time }} {{ fixture.team_1_name }} vs {{ fixture.team_2_name }}</span>
+                </li>
+                {% endif %}
+            </ul>
+            {% endwith %}
+        {% endfor %}
+    </div>
+{% endblock %}

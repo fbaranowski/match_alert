@@ -23,6 +23,19 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", home_views.HomeView.as_view(), name="home"),
-    path("dummy/", home_views.dummy_view, name="dummy"),
+    path(
+        "table/<slug:slug>/", home_views.LeagueTableView.as_view(), name="league_table"
+    ),
+    path("<slug:slug>/", home_views.LeagueTeamsView.as_view(), name="league_teams"),
+    path(
+        "fixtures/<slug:slug>/",
+        home_views.LeagueFixturesView.as_view(),
+        name="league_fixtures",
+    ),
+    path(
+        "results/<slug:slug>/",
+        home_views.LeagueResultsView.as_view(),
+        name="league_results",
+    ),
     path("auth/", include("users.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,8 +9,8 @@ from selenium.common.exceptions import (
 )
 import re
 from datetime import datetime
-from attributes import WebsiteAttributes, RegexPatterns
-from objects import Team, TableLabels, Fixture, Result
+from match_scraper.logic.attributes import WebsiteAttributes, RegexPatterns, Validator
+from match_scraper.logic.objects import Team, TableLabels, Fixture, Result
 
 
 class Scraper:
@@ -108,7 +108,8 @@ class Scraper:
             formatted_day = [day.strip() for day in days]
             date = formatted_day[0]
             date = datetime.strptime(date, "%A " "%d " "%B " "%Y").date()
-            if date < datetime(2023, 7, 1).date():
+
+            if not Validator.date_validator(date_to_validate=date):
                 break
 
             for i in range(1, len(formatted_day)):

@@ -1,0 +1,45 @@
+{% extends 'home/base.html' %}
+{% block nav %}
+    {% for league in leagues %}
+        <li><a class="dropdown-item" href="{% url 'league_teams' slug=league.slug %}">{{ league.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="content-section">
+	<div class="ptable">
+	  <h1 class="headin">{{ league.name }} Standings</h1>
+	  <a href="{% url 'league_teams' slug=league.slug %}">Teams</a> <a href="{% url 'league_fixtures' slug=league.slug %}">Fixtures</a> <a href="{% url 'league_results' slug=league.slug %}">Results</a>
+		<table>
+			<tr class="col">
+				<th>#</th>
+				<th>Team</th>
+				<th>GP</th>
+				<th>W</th>
+				<th>D</th>
+				<th>L</th>
+				<th>GF</th>
+				<th>GA</th>
+				<th>GD</th>
+				<th>PTS</th>
+				<th>F</th>
+			</tr>
+			{% for team in league.table.all %}
+				<tr class="wpos">
+					<td>{{ team.position }} </td>
+					<td>{{ team.team}} </td>
+					<td>{{ team.played }}</td>
+					<td>{{ team.no_wins }}</td>
+					<td>{{ team.no_draws }}</td>
+					<td>{{ team.no_losses }}</td>
+					<td>{{ team.goals_for }}</td>
+					<td>{{ team.goals_against }}</td>
+					<td>{{ team.goals_difference }}</td>
+					<td>{{ team.points }}</td>
+					<td>{{ team.form }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+{% endblock %}

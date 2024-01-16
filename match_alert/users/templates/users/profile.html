@@ -2,7 +2,7 @@
 
 {% block nav %}
     {% for league in leagues %}
-        <li><a class="dropdown-item" href="{% url league.href_str %}">{{ league.name }}</a></li>
+        <li><a class="dropdown-item" href="{% url 'league_teams' slug=league.slug %}">{{ league.name }}</a></li>
     {% endfor %}
 {% endblock %}
 

@@ -1,5 +1,5 @@
-from logic.main import Scraper
-from logic.attributes import WebsiteAttributes, UrlsParams
+from match_scraper.logic.main import Scraper
+from match_scraper.logic.attributes import WebsiteAttributes, UrlsParams
 from home import models as home_models
 
 
@@ -61,8 +61,10 @@ class DatabaseHandler:
         serie_a_table = Scraper.get_table(UrlsParams.league_name_url["serie_a"])
         ligue_1_table = Scraper.get_table(UrlsParams.league_name_url["ligue_1"])
 
+        home_models.LeagueTable.objects.all().delete()
+
         for element in premier_league_table:
-            obj, created = home_models.LeagueTable.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.get_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -77,7 +79,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.PREMIER_LEAGUE,
             )
         for element in la_liga_table:
-            obj, created = home_models.LeagueTable.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.get_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -92,7 +94,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.LA_LIGA,
             )
         for element in bundesliga_table:
-            obj, created = home_models.LeagueTable.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.get_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -107,7 +109,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.BUNDESLIGA,
             )
         for element in serie_a_table:
-            obj, created = home_models.LeagueTable.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.get_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -122,7 +124,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.SERIE_A,
             )
         for element in ligue_1_table:
-            obj, created = home_models.LeagueTable.objects.update_or_create(
+            obj, created = home_models.LeagueTable.objects.get_or_create(
                 position=element.position,
                 team=element.team,
                 played=element.played,

@@ -5,6 +5,7 @@ class League(models.Model):
     name = models.CharField(max_length=100)
     href_str = models.TextField()
     season = models.CharField(max_length=7, default="2023/24")
+    slug = models.SlugField(default="", null=False)
 
     def __str__(self):
         return self.name
@@ -13,9 +14,7 @@ class League(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=75)
     short_name = models.CharField(max_length=30, null=True, blank=True)
-    league = models.OneToOneField(
-        League, on_delete=models.CASCADE, related_name="teams"
-    )
+    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="teams")
 
     def __str__(self):
         return self.name
@@ -33,9 +32,7 @@ class LeagueTable(models.Model):
     goals_difference = models.SmallIntegerField()
     points = models.SmallIntegerField()
     form = models.CharField(max_length=5)
-    league = models.OneToOneField(
-        League, on_delete=models.CASCADE, related_name="table"
-    )
+    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="table")
 
     def __str__(self):
         return f"{self.league} Table"
