@@ -7,9 +7,9 @@
 
 {% block content %}
     <div class="content-section">
-        <h1>{{ league.name }} Fixtures</h1>
+        <h1>{{ team.name }} Fixtures</h1>
         <div class="h2-container" style="display: flex; justify-content: center; align-items: center; margin-bottom:30px;">
-            <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_table' slug=league.slug %}">Table</a></h2> <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_results' slug=league.slug %}">Results</a></h2> <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_teams' slug=league.slug %}">Teams</a></h2>
+            <button class="btn btn-outline-info btn-lg" style="margin-right:20px;" onclick="window.location.href='{% url 'league_teams' slug=team.league.slug %}'">Back to {{ team.league.name }}</button> <button class="btn btn-outline-info btn-lg" style="margin-right:20px;" onclick="window.location.href='{% url 'team_results' pk=team.pk %}'">Results</button>
         </div>
         {% for fixture in fixtures %}
         <ul style="list-style:none;">

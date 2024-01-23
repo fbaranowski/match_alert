@@ -26,7 +26,9 @@ urlpatterns = [
     path(
         "table/<slug:slug>/", home_views.LeagueTableView.as_view(), name="league_table"
     ),
-    path("<slug:slug>/", home_views.LeagueTeamsView.as_view(), name="league_teams"),
+    path(
+        "<slug:slug>/teams/", home_views.LeagueTeamsView.as_view(), name="league_teams"
+    ),
     path(
         "fixtures/<slug:slug>/",
         home_views.LeagueFixturesView.as_view(),
@@ -36,6 +38,16 @@ urlpatterns = [
         "results/<slug:slug>/",
         home_views.LeagueResultsView.as_view(),
         name="league_results",
+    ),
+    path(
+        "team/fixtures/<slug:team_slug>/",
+        home_views.TeamFixturesView.as_view(),
+        name="team_fixtures",
+    ),
+    path(
+        "team/results/<int:pk>/",
+        home_views.TeamResultsView.as_view(),
+        name="team_results",
     ),
     path("auth/", include("users.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
