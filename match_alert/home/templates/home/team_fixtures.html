@@ -8,14 +8,14 @@
 {% block content %}
     <div class="content-section">
         <h1>{{ team.name }} Fixtures</h1>
-        <div class="h2-container" style="display: flex; justify-content: center; align-items: center; margin-bottom:30px;">
-            <button class="btn btn-outline-info btn-lg" style="margin-right:20px;" onclick="window.location.href='{% url 'league_teams' slug=team.league.slug %}'">Back to {{ team.league.name }}</button> <button class="btn btn-outline-info btn-lg" style="margin-right:20px;" onclick="window.location.href='{% url 'team_results' pk=team.pk %}'">Results</button>
+        <div class="button-container">
+            <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_teams' slug=team.league.slug %}'">Back to {{ team.league.name }}</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'team_results' team_slug=team.team_slug %}'">Results</button>
         </div>
-        {% for fixture in fixtures %}
-        <ul style="list-style:none;">
+        {% for fixture in ordered_fixtures %}
+        <ul class="listing">
             <li>
-                <strong style="color:#0dcaf0;">{{ fixture.date|date:"l, j F o" }}</strong><br>
-                <span style="font-weight:bold; margin-right: 10px;">{{ fixture.time|time:"G:i" }}</span> <span>{{ fixture.team_1_name }} vs {{ fixture.team_2_name }}</span>
+                <strong class="strong-date">{{ fixture.date|date:"l, j F o" }}</strong><br>
+                <span class="time-span">{{ fixture.time|time:"G:i" }} CET</span> <span>{{ fixture.team_1_name }} vs {{ fixture.team_2_name }}</span>
                 <hr>
             </li>
         </ul>

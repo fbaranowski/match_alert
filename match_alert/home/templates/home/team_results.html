@@ -8,18 +8,18 @@
 {% block content %}
     <div class="content-section">
         <h1>{{ team.name }} Results</h1>
-        <div class="h2-container" style="display: flex; justify-content: center; align-items: center; margin-bottom:30px;">
-            <button class="btn btn-outline-info btn-lg" style="margin-right:20px;" onclick="window.location.href='{% url 'league_teams' slug=team.league.slug %}'">Back to {{ team.league.name }}</button> <button class="btn btn-outline-info btn-lg" style="margin-right:20px;" onclick="window.location.href='{% url 'team_fixtures' pk=team.pk %}'">Fixtures</button>
+        <div class="button-container">
+            <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_teams' slug=team.league.slug %}'">Back to {{ team.league.name }}</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'team_fixtures' team_slug=team.team_slug %}'">Fixtures</button>
         </div>
         {% for result in results %}
-            <ul style="list-style:none;">
+            <ul class="listing">
                 <li>
-                    <strong style="color:#0dcaf0;">{{ result.date|date:"l, j F o" }}</strong><br>
+                    <strong class="strong-date">{{ result.date|date:"l, j F o" }}</strong><br>
                     {% if result.team_1_score > result.team_2_score %}
-                    <span><strong style="font-weight: bold;">{{ result.team_1_name }} {{ result.team_1_score }}</strong> - {{ result.team_2_score }} {{ result.team_2_name }}</span>
+                    <span><b>{{ result.team_1_name }} {{ result.team_1_score }}</b> - {{ result.team_2_score }} {{ result.team_2_name }}</span>
                     <hr>
                     {% elif result.team_1_score < result.team_2_score %}
-                    <span>{{ result.team_1_name }} {{ result.team_1_score }} - <strong style="font-weight: bold;">{{ result.team_2_score }} {{ result.team_2_name }}</strong></span>
+                    <span>{{ result.team_1_name }} {{ result.team_1_score }} - <b>{{ result.team_2_score }} {{ result.team_2_name }}</b></span>
                     <hr>
                     {% else %}
                     <span>{{ result.team_1_name }} {{ result.team_1_score }} - {{ result.team_2_score }} {{ result.team_2_name }}</span>

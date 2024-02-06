@@ -7,10 +7,10 @@
 
 {% block content %}
 <div class="content-section">
-	<div class="ptable" style="overflow: auto;">
+	<div class="ptable">
 	  <h1 class="headin">{{ league.name }} Standings</h1>
-	  <div class="h2-container">
-	  	<h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_teams' slug=league.slug %}">Teams</a></h2> <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_fixtures' slug=league.slug %}">Fixtures</a></h2> <h2 class="league-attrs" style="font-size: 1.325rem;"><a href="{% url 'league_results' slug=league.slug %}">Results</a></h2>
+	  <div class="button-container">
+	  	<button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_teams' slug=league.slug %}'">Teams</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_fixtures' slug=league.slug %}'">Fixtures</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_results' slug=league.slug %}'">Results</button>
 	  </div>
 		  <table>
 			<tr class="col">

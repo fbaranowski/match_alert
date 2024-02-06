@@ -8,26 +8,12 @@
 {% block content %}
     <div class="content-section">
         <h1>{{ league.name }} Teams</h1>
-        <div class="h2-container" style="display: flex; justify-content: center; align-items: center; margin-bottom:30px;">
-<!--            <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_table' slug=league.slug %}">Table</a></h2> <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_fixtures' slug=league.slug %}">Fixtures</a></h2> <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_results' slug=league.slug %}">Results</a></h2>-->
-                <button class="btn btn-outline-info btn-lg" style="margin-right:20px;" onclick="window.location.href='{% url 'league_table' slug=league.slug %}'">Table</button> <button class="btn btn-outline-info btn-lg" style="margin-right:20px;" onclick="window.location.href='{% url 'league_fixtures' slug=league.slug %}'">Fixtures</button> <button class="btn btn-outline-info btn-lg" style="margin-right:20px;" onclick="window.location.href='{% url 'league_results' slug=league.slug %}'">Results</button>
+        <div class="button-container">
+            <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_table' slug=league.slug %}'">Table</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_fixtures' slug=league.slug %}'">Fixtures</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_results' slug=league.slug %}'">Results</button>
         </div>
 
         {% for team in league.teams.all %}
-<!--            {% if forloop.counter|divisibleby:3 %}-->
-<!--&lt;!&ndash;            <span style="margin-right:20px; text-align:justify;">{{ team.name }}</span>&ndash;&gt;-->
-<!--            <div style="display:inline-block;">-->
-<!--            <a href="#" style="margin-left:60px; margin-right:80px;">{{ team.name }}</a>-->
-<!--            <hr>-->
-<!--            </div>-->
-<!--            {% else %}-->
-<!--&lt;!&ndash;            <span style="margin-right:20px; text-align:justify;">{{ team.name }}</span>&ndash;&gt;-->
-<!--            <div style="display:inline-block;">-->
-<!--            <a href="#" style="margin-left:100px; margin-right:70px;">{{ team.name }}</a>-->
-<!--            <hr>-->
-<!--            </div>-->
-<!--            {% endif %}-->
-            <div style="display:run-in; text-align:center;">
+            <div class="teams-container">
                 <a href="{% url 'team_fixtures' team_slug=team.team_slug %}">{{ team.name }}</a>
             </div>
         {% endfor %}

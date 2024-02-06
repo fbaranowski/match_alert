@@ -8,24 +8,24 @@
 {% block content %}
     <div class="content-section">
         <h1>{{ league.name }} Results</h1>
-        <div class="h2-container" style="display: flex; justify-content: center; align-items: center; margin-bottom:30px;">
-            <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_table' slug=league.slug %}">Table</a></h2> <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_fixtures' slug=league.slug %}">Fixtures</a></h2> <h2 class="league-attrs" style="margin-right: 15px; font-size: 1.325rem;"><a href="{% url 'league_teams' slug=league.slug %}">Teams</a></h2>
+        <div class="button-container">
+            <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_table' slug=league.slug %}'">Table</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_fixtures' slug=league.slug %}'">Fixtures</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_teams' slug=league.slug %}'">Teams</button>
         </div>
-        {% for result in league.results.all %}
-            <ul style="list-style:none;">
+        {% for date, results in results_dict.items %}
+            <ul class="listing">
+                <strong class="strong-date">{{ date|date:"l, j F o" }}</strong><br>
+                {% for result in results %}
                 <li>
-                    <strong style="color:#0dcaf0;">{{ result.date|date:"l, j F o" }}</strong><br>
                     {% if result.team_1_score > result.team_2_score %}
-                    <span><strong style="font-weight: bold;">{{ result.team_1_name }} {{ result.team_1_score }}</strong> - {{ result.team_2_score }} {{ result.team_2_name }}</span>
-                    <hr>
+                    <span><b>{{ result.team_1_name }} {{ result.team_1_score }}</b> - {{ result.team_2_score }} {{ result.team_2_name }}</span>
                     {% elif result.team_1_score < result.team_2_score %}
-                    <span>{{ result.team_1_name }} {{ result.team_1_score }} - <strong style="font-weight: bold;">{{ result.team_2_score }} {{ result.team_2_name }}</strong></span>
-                    <hr>
+                    <span>{{ result.team_1_name }} {{ result.team_1_score }} - <b>{{ result.team_2_score }} {{ result.team_2_name }}</b></span>
                     {% else %}
                     <span>{{ result.team_1_name }} {{ result.team_1_score }} - {{ result.team_2_score }} {{ result.team_2_name }}</span>
-                    <hr>
                     {% endif %}
                 </li>
+                {% endfor %}
+                <hr>
             </ul>
         {% endfor %}
     </div>
