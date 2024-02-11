@@ -11,7 +11,7 @@
         <div class="button-container">
             <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_teams' slug=team.league.slug %}'">Back to {{ team.league.name }}</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'team_fixtures' team_slug=team.team_slug %}'">Fixtures</button>
         </div>
-        {% for result in results %}
+        {% for result in ordered_results %}
             <ul class="listing">
                 <li>
                     <strong class="strong-date">{{ result.date|date:"l, j F o" }}</strong><br>

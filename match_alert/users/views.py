@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from users.forms import UserRegisterForm
@@ -7,9 +7,15 @@ from home.models import League
 from django.contrib.auth import views as auth_views
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from users.forms import UserUpdateForm, ProfileUpdateForm
+from users.forms import (
+    UserUpdateForm,
+    ProfileUpdateForm,
+    ProfileLeagueForm,
+    ProfileTeamForm,
+)
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from users.models import Profile
 
 
 class RegisterView(SuccessMessageMixin, CreateView):
@@ -146,3 +152,39 @@ class CustomPasswordChangeView(SuccessMessageMixin, auth_views.PasswordChangeVie
     extra_context = {"leagues": League.objects.all()}
     success_url = reverse_lazy("home")
     success_message = "Your password has been changed"
+
+
+class ProfileUpdateFollowedLeaguesView(
+    UpdateView, LoginRequiredMixin, UserPassesTestMixin
+):
+    model = Profile
+    template_name = "users/update_followed_leagues.html"
+    form_class = ProfileLeagueForm
+    success_url = reverse_lazy("home")
+    extra_context = {"leagues": League.objects.all()}
+
+    def test_func(self):
+        user = User.objects.get(pk=self.kwargs["pk"])
+        return self.request.user == user
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You have no access to this page")
+        return redirect("home")
+
+
+class ProfileUpdateFollowedTeamsView(
+    UpdateView, LoginRequiredMixin, UserPassesTestMixin
+):
+    model = Profile
+    template_name = "users/update_followed_teams.html"
+    form_class = ProfileTeamForm
+    success_url = reverse_lazy("home")
+    extra_context = {"leagues": League.objects.all()}
+
+    def test_func(self):
+        user = User.objects.get(pk=self.kwargs["pk"])
+        return self.request.user == user
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You have no access to this page")
+        return redirect("home")

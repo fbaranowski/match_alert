@@ -12,15 +12,30 @@
             <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_table' slug=league.slug %}'">Table</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_results' slug=league.slug %}'">Results</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_teams' slug=league.slug %}'">Teams</button>
         </div>
         {% for date, fixtures in fixtures_dict.items %}
-        <ul class="listing">
-            <li>
+<!--        <ul class="listing">-->
+<!--            <li>-->
                 <strong class="strong-date">{{ date|date:"l, j F o" }}</strong><br>
+<!--                {% for fixture in fixtures %}-->
+<!--                <span class="time-span">{{ fixture.time|time:"G:i" }} CET</span> <span>{{ fixture.team_1_name }} vs {{ fixture.team_2_name }}</span><br>-->
+<!--                {% endfor %}-->
+<!--                <hr>-->
                 {% for fixture in fixtures %}
-                <span class="time-span">{{ fixture.time|time:"G:i" }} CET</span> <span>{{ fixture.team_1_name }} vs {{ fixture.team_2_name }}</span><br>
+                    <table class="matches-table">
+                        <tr>
+                            <td class="time-td">{{ fixture.time|time:"G:i" }} CET</td>
+                            <td class="team1-td">{{ fixture.team_1_name }}</td>
+                            <td class="vs-td">vs</td>
+                            <td class="team2-td">{{ fixture.team_2_name }}</td>
+<!--                            <td>{{ fixture.time|time:"G:i" }} CET</td>-->
+<!--                            <td>{{ fixture.team_1_name }}</td>-->
+<!--                            <td>vs</td>-->
+<!--                            <td>{{ fixture.team_2_name }}</td>-->
+                        </tr>
+                    </table>
                 {% endfor %}
-                <hr>
-            </li>
-        </ul>
+<!--            </li>-->
+<!--        </ul>-->
+        <hr>
         {% endfor %}
     </div>
 {% endblock %}

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "match_scraper.apps.MatchScraperConfig",
     "crispy_forms",
     "crispy_bootstrap4",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [

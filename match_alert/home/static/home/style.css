@@ -226,3 +226,30 @@ abbr[title] {
     font-weight: bold;
     margin-right: 10px;
 }
+
+.matches-table {
+    overflow: scroll;
+    overflow-x: auto;
+    width: 80%;
+    table-layout: fixed;
+}
+
+.time-td {
+    width: 1%;
+    font-weight: bold;
+}
+
+.team1-td {
+    width: 4%;
+    text-align: right;
+}
+
+.vs-td {
+    width: 1%;
+    text-align: center;
+}
+
+.team2-td {
+    width: 3%;
+    text-align: left;
+}

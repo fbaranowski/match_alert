@@ -116,18 +116,18 @@ class TeamResultsView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["results"] = (
-            Result.objects.all()
-            .filter(league=self.object.league, team_1_name=self.object.name)
-            .order_by("-date")
-            | Result.objects.all()
-            .filter(league=self.object.league, team_2_name=self.object.name)
-            .order_by("-date")
-            | Result.objects.all()
-            .filter(league=self.object.league, team_1_name=self.object.short_name)
-            .order_by("-date")
-            | Result.objects.all()
-            .filter(league=self.object.league, team_2_name=self.object.short_name)
-            .order_by("-date")
+        all_results = Result.objects.all()
+        filtered_results = (
+            all_results.filter(league=self.object.league, team_1_name=self.object.name)
+            | all_results.filter(
+                league=self.object.league, team_2_name=self.object.name
+            )
+            | all_results.filter(
+                league=self.object.league, team_1_name=self.object.short_name
+            )
+            | all_results.filter(
+                league=self.object.league, team_2_name=self.object.short_name
+            )
         )
+        context["ordered_results"] = filtered_results.order_by("-date")
         return context

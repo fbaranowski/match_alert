@@ -36,4 +36,14 @@ urlpatterns = [
         user_views.CustomPasswordChangeView.as_view(),
         name="change_password",
     ),
+    path(
+        "profile/<int:pk>/update_leagues/",
+        user_views.ProfileUpdateFollowedLeaguesView.as_view(),
+        name="update_leagues",
+    ),
+    path(
+        "profile/<int:pk>/update_teams/",
+        user_views.ProfileUpdateFollowedTeamsView.as_view(),
+        name="update_teams",
+    ),
 ]

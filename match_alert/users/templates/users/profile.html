@@ -14,12 +14,22 @@
             <h2 class="account-heading">{{ profile.user.username }}</h2>
             <p>E-mail: {{ user.email }}</p>
             <p>Full name: {{ user.first_name }} {{ user.last_name }}</p>
+            <p>Followed leagues:</p>
+            {% for league in profile.leagues.all %}
+                <a class="ml-2" href="{% url 'league_table' slug=league.slug %}">{{ league.name }}</a><br>
+            {% endfor %}
+            <p>Followed teams:</p>
+            {% for team in profile.teams.all %}
+                <a class="ml-2" href="{% url 'team_fixtures' team_slug=team.team_slug %}">{{ team.name }}</a><br>
+            {% endfor %}
         </div>
 
         <div class="border-top pt-3">
         <small>
             <a class="ml-2" href="{% url 'update_profile' user.pk %}">Update Profile</a><br>
-            <a class="ml-2" href="{% url 'change_password' %}">Change Password</a>
+            <a class="ml-2" href="{% url 'change_password' %}">Change Password</a><br>
+            <a class="ml-2" href="{% url 'update_leagues' user.pk %}">Update followed leagues</a><br>
+            <a class="ml-2" href="{% url 'update_teams' user.pk %}">Update followed teams</a>
         </small>
         </div>
     </div>
