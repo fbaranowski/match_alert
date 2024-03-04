@@ -11,12 +11,10 @@
         <div class="button-container">
             <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_table' slug=league.slug %}'">Table</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_fixtures' slug=league.slug %}'">Fixtures</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_results' slug=league.slug %}'">Results</button>
         </div>
-
         {% for team in league.teams.all %}
             <div class="teams-container">
                 <a href="{% url 'team_fixtures' team_slug=team.team_slug %}">{{ team.name }}</a>
             </div>
         {% endfor %}
-
     </div>
 {% endblock %}

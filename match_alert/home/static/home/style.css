@@ -16,15 +16,13 @@ body {
 }
 
 body {
-    background-color: var(--bs-gray-800);
+    background-color: var(--bs-gray-800)!important;
     color: #e5e5e5!important;
     font: 16px/1.25 'Raleway', sans-serif;
-    min-width: 100%;
-    min-height: 100%;
 }
 main {
     background-color: var(--bs-gray-800);
-    min-height: 100%;
+    height: 100vh;
     min-width: 100%;
 }
 
@@ -74,6 +72,7 @@ p {
     border-radius: 3px;
     margin-bottom: 20px;
     background-color: var(--bs-gray-800);
+    min-height: 100%;
 }
 
 small {
@@ -96,19 +95,39 @@ small {
 .account-info {
     float: left;
     margin-right: 250px;
+    margin-left: 100px;
 }
 
 .account-heading {
-    color: #a2ed56;
+    color: #0dcaf0;
     text-align: center;
-    font-size: 2.5rem;
-    margin-top:10px;
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 .account-img {
     width: 200px;
     height: 200px;
     margin-bottom: 50px;
+    margin-left: 30px;
+}
+
+.user-info-p {
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+
+user-info-span {
+    font-weight: normal;
+}
+
+.follow-header {
+    text-align: left;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    font-weight: bold;
 }
 
 nav {
@@ -121,14 +140,12 @@ nav {
     z-index: 9999;
 }
 
-
-/* TABLE */
-.ptable table{
+.ptable table {
 	margin: 30px auto;
 	border-collapse: collapse;
 }
 
-.ptable{
+.ptable {
 	margin: 0px 0% 30px 0%;
     overflow: auto;
 }
@@ -137,51 +154,47 @@ th, td {
     padding: 10px;
 }
 
-th{
+th {
 	color: #0dcaf0;
 }
 
-.headin{
+.headin {
 	text-align: center;
 	text-decoration: none;
 	margin: 30px;
 	display: block;
 }
 
-.wpos{
+.wpos {
 	text-align: center;
 }
 
-.wpos td{
+.wpos td {
 	color: #a2ed56;
 }
 
-.pos{
+.pos {
 	text-align: center;
 }
 
-.pos td{
-	color: #ff7b21;
-}
-
-table .col{
+table .col {
 	border-bottom: 1px solid #FFFFFF;
     text-align: center;
 }
 
-.wpos:hover{
+.wpos:hover {
 	background-color: #a2ed56;
 }
 
-.wpos:hover td{
+.wpos:hover td {
 	color: #000000;
 }
 
-.pos:hover{
-	background-color: #ff7b21;
+.pos:hover {
+background-color: #a2ed56;
 }
 
-.pos:hover td{
+.pos:hover td {
 	color: #000000;
 }
 
@@ -213,13 +226,18 @@ abbr[title] {
     margin-right: 20px;
 }
 
-.strong-date {
-    color: #0dcaf0;
+.btn-home {
+    align-content: center;
+    margin-bottom: 15px;
 }
 
-.listing {
-    list-style: none;
-    align-content: space-evenly;
+.leagues-div {
+    align-content: center;
+    text-align: center;
+}
+
+.strong-date {
+    color: #0dcaf0;
 }
 
 .time-span {

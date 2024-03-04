@@ -12,21 +12,30 @@
             <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_table' slug=league.slug %}'">Table</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_fixtures' slug=league.slug %}'">Fixtures</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_teams' slug=league.slug %}'">Teams</button>
         </div>
         {% for date, results in results_dict.items %}
-            <ul class="listing">
-                <strong class="strong-date">{{ date|date:"l, j F o" }}</strong><br>
+            <strong class="strong-date">{{ date|date:"l, j F o" }}</strong><br>
                 {% for result in results %}
-                <li>
-                    {% if result.team_1_score > result.team_2_score %}
-                    <span><b>{{ result.team_1_name }} {{ result.team_1_score }}</b> - {{ result.team_2_score }} {{ result.team_2_name }}</span>
-                    {% elif result.team_1_score < result.team_2_score %}
-                    <span>{{ result.team_1_name }} {{ result.team_1_score }} - <b>{{ result.team_2_score }} {{ result.team_2_name }}</b></span>
-                    {% else %}
-                    <span>{{ result.team_1_name }} {{ result.team_1_score }} - {{ result.team_2_score }} {{ result.team_2_name }}</span>
-                    {% endif %}
-                </li>
+                    <table class="matches-table">
+                        <tr>
+                            {% if result.team_1_score > result.team_2_score %}
+                                <td class="time-td">Full Time</td>
+                                <td class="team1-td"><b>{{ result.team_1_name }}</b></td>
+                                <td class="vs-td"><b>{{ result.team_1_score }}</b> - {{ result.team_2_score }}</td>
+                                <td class="team2-td">{{ result.team_2_name }}</td>
+                            {% elif result.team_1_score < result.team_2_score %}
+                                <td class="time-td">Full Time</td>
+                                <td class="team1-td">{{ result.team_1_name }}</td>
+                                <td class="vs-td">{{ result.team_1_score }} - <b>{{ result.team_2_score }}</b></td>
+                                <td class="team2-td"><b>{{ result.team_2_name }}</b></td>
+                            {% else %}
+                                <td class="time-td">Full Time</td>
+                                <td class="team1-td">{{ result.team_1_name }}</td>
+                                <td class="vs-td">{{ result.team_1_score }} - {{ result.team_2_score }}</td>
+                                <td class="team2-td">{{ result.team_2_name }}</td>
+                            {% endif %}
+                        </tr>
+                    </table>
                 {% endfor %}
-                <hr>
-            </ul>
+            <hr>
         {% endfor %}
     </div>
 {% endblock %}

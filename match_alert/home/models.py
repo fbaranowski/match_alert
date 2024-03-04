@@ -4,8 +4,6 @@ from django.utils.text import slugify
 
 class League(models.Model):
     name = models.CharField(max_length=100)
-    href_str = models.TextField()
-    season = models.CharField(max_length=7, default="2023/24")
     slug = models.SlugField(default="", null=False)
 
     def __str__(self):

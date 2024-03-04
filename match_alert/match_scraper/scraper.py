@@ -1,16 +1,14 @@
+from home import models as home_models
 from match_scraper.logic.main import Scraper
 from match_scraper.logic.attributes import WebsiteAttributes, UrlsParams
-from home import models as home_models
 
 
 class DatabaseHandler:
-    PREMIER_LEAGUE = home_models.League.objects.get(
-        name="Premier League", season="2023/24"
-    )
-    LA_LIGA = home_models.League.objects.get(name="La Liga", season="2023/24")
-    BUNDESLIGA = home_models.League.objects.get(name="Bundesliga", season="2023/24")
-    SERIE_A = home_models.League.objects.get(name="Serie A", season="2023/24")
-    LIGUE_1 = home_models.League.objects.get(name="Ligue 1", season="2023/24")
+    PREMIER_LEAGUE = home_models.League.objects.get(name="Premier League")
+    LA_LIGA = home_models.League.objects.get(name="La Liga")
+    BUNDESLIGA = home_models.League.objects.get(name="Bundesliga")
+    SERIE_A = home_models.League.objects.get(name="Serie A")
+    LIGUE_1 = home_models.League.objects.get(name="Ligue 1")
 
     @staticmethod
     def fill_team_model():
@@ -64,7 +62,7 @@ class DatabaseHandler:
         home_models.LeagueTable.objects.all().delete()
 
         for element in premier_league_table:
-            obj, created = home_models.LeagueTable.objects.get_or_create(
+            home_models.LeagueTable.objects.create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -79,7 +77,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.PREMIER_LEAGUE,
             )
         for element in la_liga_table:
-            obj, created = home_models.LeagueTable.objects.get_or_create(
+            home_models.LeagueTable.objects.create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -94,7 +92,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.LA_LIGA,
             )
         for element in bundesliga_table:
-            obj, created = home_models.LeagueTable.objects.get_or_create(
+            home_models.LeagueTable.objects.create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -109,7 +107,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.BUNDESLIGA,
             )
         for element in serie_a_table:
-            obj, created = home_models.LeagueTable.objects.get_or_create(
+            home_models.LeagueTable.objects.create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -124,7 +122,7 @@ class DatabaseHandler:
                 league=DatabaseHandler.SERIE_A,
             )
         for element in ligue_1_table:
-            obj, created = home_models.LeagueTable.objects.get_or_create(
+            home_models.LeagueTable.objects.create(
                 position=element.position,
                 team=element.team,
                 played=element.played,
@@ -210,42 +208,117 @@ class DatabaseHandler:
         ligue_1_fixtures = Scraper.get_fixtures(UrlsParams.league_name_url["ligue_1"])
 
         for fixture in premier_league_fixtures:
-            obj, created = home_models.Fixture.objects.get_or_create(
-                team_1_name=fixture.team_1_name,
-                team_2_name=fixture.team_2_name,
-                date=fixture.date,
-                time=fixture.time,
-                league=DatabaseHandler.PREMIER_LEAGUE,
-            )
+            db_fixture = home_models.Fixture.objects.filter(
+                team_1_name=fixture.team_1_name, team_2_name=fixture.team_2_name
+            ).first()
+
+            if not db_fixture:
+                home_models.Fixture.objects.create(
+                    team_1_name=fixture.team_1_name,
+                    team_2_name=fixture.team_2_name,
+                    date=fixture.date,
+                    time=fixture.time,
+                    league=DatabaseHandler.PREMIER_LEAGUE,
+                )
+            elif (
+                db_fixture
+                and db_fixture.date != fixture.date
+                or db_fixture.time != fixture.time
+            ):
+                db_fixture.date = fixture.date
+                db_fixture.time = fixture.time
+                db_fixture.save()
+            else:
+                continue
+
         for fixture in la_liga_fixtures:
-            obj, created = home_models.Fixture.objects.get_or_create(
-                team_1_name=fixture.team_1_name,
-                team_2_name=fixture.team_2_name,
-                date=fixture.date,
-                time=fixture.time,
-                league=DatabaseHandler.LA_LIGA,
-            )
+            db_fixture = home_models.Fixture.objects.filter(
+                team_1_name=fixture.team_1_name, team_2_name=fixture.team_2_name
+            ).first()
+            if not db_fixture:
+                home_models.Fixture.objects.create(
+                    team_1_name=fixture.team_1_name,
+                    team_2_name=fixture.team_2_name,
+                    date=fixture.date,
+                    time=fixture.time,
+                    league=DatabaseHandler.LA_LIGA,
+                )
+            elif (
+                db_fixture
+                and fixture.date != db_fixture.date
+                or fixture.time != db_fixture.time
+            ):
+                db_fixture.date = fixture.date
+                db_fixture.time = fixture.time
+                db_fixture.save()
+            else:
+                continue
+
         for fixture in bundesliga_fixtures:
-            obj, created = home_models.Fixture.objects.get_or_create(
-                team_1_name=fixture.team_1_name,
-                team_2_name=fixture.team_2_name,
-                date=fixture.date,
-                time=fixture.time,
-                league=DatabaseHandler.BUNDESLIGA,
-            )
+            db_fixture = home_models.Fixture.objects.filter(
+                team_1_name=fixture.team_1_name, team_2_name=fixture.team_2_name
+            ).first()
+            if not db_fixture:
+                home_models.Fixture.objects.create(
+                    team_1_name=fixture.team_1_name,
+                    team_2_name=fixture.team_2_name,
+                    date=fixture.date,
+                    time=fixture.time,
+                    league=DatabaseHandler.BUNDESLIGA,
+                )
+            elif (
+                db_fixture
+                and fixture.date != db_fixture.date
+                or fixture.time != db_fixture.time
+            ):
+                db_fixture.date = fixture.date
+                db_fixture.time = fixture.time
+                db_fixture.save()
+            else:
+                continue
+
         for fixture in serie_a_fixtures:
-            obj, created = home_models.Fixture.objects.get_or_create(
-                team_1_name=fixture.team_1_name,
-                team_2_name=fixture.team_2_name,
-                date=fixture.date,
-                time=fixture.time,
-                league=DatabaseHandler.SERIE_A,
-            )
+            db_fixture = home_models.Fixture.objects.filter(
+                team_1_name=fixture.team_1_name, team_2_name=fixture.team_2_name
+            ).first()
+            if not db_fixture:
+                home_models.Fixture.objects.create(
+                    team_1_name=fixture.team_1_name,
+                    team_2_name=fixture.team_2_name,
+                    date=fixture.date,
+                    time=fixture.time,
+                    league=DatabaseHandler.SERIE_A,
+                )
+            elif (
+                db_fixture
+                and fixture.date != db_fixture.date
+                or fixture.time != db_fixture.time
+            ):
+                db_fixture.date = fixture.date
+                db_fixture.time = fixture.time
+                db_fixture.save()
+            else:
+                continue
+
         for fixture in ligue_1_fixtures:
-            obj, created = home_models.Fixture.objects.get_or_create(
-                team_1_name=fixture.team_1_name,
-                team_2_name=fixture.team_2_name,
-                date=fixture.date,
-                time=fixture.time,
-                league=DatabaseHandler.LIGUE_1,
-            )
+            db_fixture = home_models.Fixture.objects.filter(
+                team_1_name=fixture.team_1_name, team_2_name=fixture.team_2_name
+            ).first()
+            if not db_fixture:
+                home_models.Fixture.objects.create(
+                    team_1_name=fixture.team_1_name,
+                    team_2_name=fixture.team_2_name,
+                    date=fixture.date,
+                    time=fixture.time,
+                    league=DatabaseHandler.LIGUE_1,
+                )
+            elif (
+                db_fixture
+                and fixture.date != db_fixture.date
+                or fixture.time != db_fixture.time
+            ):
+                db_fixture.date = fixture.date
+                db_fixture.time = fixture.time
+                db_fixture.save()
+            else:
+                continue

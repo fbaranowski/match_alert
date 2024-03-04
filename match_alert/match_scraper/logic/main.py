@@ -1,4 +1,6 @@
+import re
 import requests
+from datetime import datetime
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -7,8 +9,6 @@ from selenium.common.exceptions import (
     NoSuchElementException,
     ElementClickInterceptedException,
 )
-import re
-from datetime import datetime
 from match_scraper.logic.attributes import WebsiteAttributes, RegexPatterns, Validator
 from match_scraper.logic.objects import Team, TableLabels, Fixture, Result
 
