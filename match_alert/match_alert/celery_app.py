@@ -1,7 +1,9 @@
 from celery import Celery
 from celery.schedules import crontab
+from django.conf import settings
 from match_scraper.scraper import DatabaseHandler
 
+settings.configure()
 queue_app = Celery(
     "scraping_queue", backend="redis://redis:6379/0", broker="redis://redis:6379/0"
 )
@@ -20,11 +22,13 @@ queue_app.conf.beat_schedule = {
 
 @queue_app.task
 def scrape_fixtures_results_tables():
-    DatabaseHandler.fill_table_model()
-    DatabaseHandler.fill_fixture_model()
-    DatabaseHandler.fill_result_model()
+    db_handler = DatabaseHandler()
+    db_handler.fill_table_model()
+    db_handler.fill_fixture_model()
+    db_handler.fill_result_model()
 
 
 @queue_app.task
 def scrape_teams():
-    DatabaseHandler.fill_team_model()
+    db_handler = DatabaseHandler()
+    db_handler.fill_team_model()
