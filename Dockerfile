@@ -4,4 +4,6 @@ COPY Pipfile Pipfile.lock ./
 RUN python -m pip install --upgrade pip
 RUN pip install --no-cache-dir pipenv && pipenv install --dev --system --deploy
 COPY match_alert/ ./
+CMD ["python3", "manage.py", "makemigrations"]
+CMD ["python3", "manage.py", "migrate"]
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -1,9 +1,14 @@
+import os
 from celery import Celery
 from celery.schedules import crontab
-from django.conf import settings
-from match_scraper.scraper import DatabaseHandler
+import django
 
-settings.configure()
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "match_alert.settings")
+django.setup()
+
+from match_scraper.scraper import DatabaseHandler  # noqa
+
+
 queue_app = Celery(
     "scraping_queue", backend="redis://redis:6379/0", broker="redis://redis:6379/0"
 )

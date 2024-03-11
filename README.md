@@ -1,35 +1,39 @@
 # Match Alert
-
 This project contains football leagues' tables, results and fixtures
 as well as specific team's results and fixtures from included leagues.
 It is also possible to create profile and add leagues/teams to favourites
 
 
 ## Tech Stack
-(biblioteki/technologie python, pipenv, docker)
-Tools and packages required to successfully install this project. For example:
-
-Linux Install
-Python 3.3 and up Install
+- Python 3.11
+- Django
+- Pipenv
+- Docker
+- Selenium
+- BeautifulSoup4
+- Celery
+- PostgreSQL
+- Redis
 
 ## Installation
+A step by step list of commands / guide that informs how to install
+locally an instance of this project.
 
-A step by step list of commands / guide that informs how to install an instance of this project.
+It is necessary to have Docker installed
+on your local machine - get Docker Desktop [here](https://www.docker.com/products/docker-desktop/)
 
-$ pip install foobar
+Using cmd, clone the repository from GitHub:
 
-$ npm install project-name --save
+`git clone https://github.com/fbaranowski/match_alert`
 
-$ any other command
+Then start containers with :
 
-For Linux and OS X
+`docker-compose up --build`
 
-npm install project-name --save
+(teraz co wpisać w urla w przeglądarce)
 
-For Windows
-
-git clone project-url
-
+(opisać wjazd do kontenera, wrzucenie modeli lig do db,
+odpalenie ręczne celery, dopisanie short_name to teamów)
 ## Screenshots
 
 
@@ -40,20 +44,18 @@ git clone project-url
 
 
 ## Running the tests
-Describe and show how to run the tests with code examples.. Explain how to run the automated tests for this system. Also explain how to test and why to test.
+From master directory, use `cd match_alert` to get into project
+directory, then once again use `cd match_alert` where `manage.py`
+file exists.
 
-Give code examples as:
+Then run all the tests using two commands:
 
-test example 1
-test example 2
-npm test
-test till you finish
+`python manage.py test home`
 
-
+`python manage.py test users`
 
 ## Authors
-Write about yourself or your organization, who created this project. For example:
+Filip Baranowski – baranowski.filip04@gmail.com
 
-Sagar Ganiga – tech.ganiga@gmail.com
-
-You can find me here at: Github LinkedIn
+You can find me here at: [Github](https://github.com/fbaranowski)
+                         [LinkedIn](https://www.linkedin.com/in/filip-baranowski-7b46a3198/)
