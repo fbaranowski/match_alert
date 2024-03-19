@@ -16,7 +16,7 @@ queue_app = Celery(
 queue_app.conf.beat_schedule = {
     "scrape-every-hour": {
         "task": "tasks.scrape_fixtures_results_tables",
-        "schedule": 3600,
+        "schedule": 1800,
     },
     "scrape-only-once-in-august": {
         "task": "tasks.scrape_teams",

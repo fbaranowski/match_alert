@@ -70,11 +70,15 @@ class ObjectSaver:
 
 class DatabaseHandler:
     def __init__(self):
-        self.premier_league = home_models.League.objects.get(name="Premier League")
-        self.la_liga = home_models.League.objects.get(name="La Liga")
-        self.bundesliga = home_models.League.objects.get(name="Bundesliga")
-        self.serie_a = home_models.League.objects.get(name="Serie A")
-        self.ligue_1 = home_models.League.objects.get(name="Ligue 1")
+        self.premier_league, created = home_models.League.objects.get_or_create(
+            name="Premier League"
+        )
+        self.la_liga, created = home_models.League.objects.get_or_create(name="La Liga")
+        self.bundesliga, created = home_models.League.objects.get_or_create(
+            name="Bundesliga"
+        )
+        self.serie_a, created = home_models.League.objects.get_or_create(name="Serie A")
+        self.ligue_1, created = home_models.League.objects.get_or_create(name="Ligue 1")
 
     def fill_team_model(self):
         ObjectSaver.save_teams(

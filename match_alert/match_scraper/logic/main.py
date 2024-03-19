@@ -9,6 +9,7 @@ from selenium.common.exceptions import (
     NoSuchElementException,
     ElementClickInterceptedException,
 )
+from selenium.webdriver.firefox.options import Options
 from match_scraper.logic.attributes import WebsiteAttributes, RegexPatterns, Validator
 from match_scraper.logic.objects import Team, TableLabels, Fixture, Result
 
@@ -69,9 +70,10 @@ class Scraper:
         """
         Function which scrapes league results from given url
         """
-        options = webdriver.FirefoxOptions()
+        driver_path = "http://firefox:4444"
+        options = Options()
         options.add_argument("-headless")
-        driver = webdriver.Firefox(options=options)
+        driver = webdriver.Remote(command_executor=driver_path, options=options)
         driver.get(f"https://www.theguardian.com/football/{url_league_name}/results")
 
         try:
@@ -132,9 +134,10 @@ class Scraper:
         """
         Function which scrapes league fixtures from given url
         """
-        options = webdriver.FirefoxOptions()
+        driver_path = "http://firefox:4444"
+        options = Options()
         options.add_argument("-headless")
-        driver = webdriver.Firefox(options=options)
+        driver = webdriver.Remote(command_executor=driver_path, options=options)
         driver.get(f"https://www.theguardian.com/football/{url_league_name}/fixtures")
 
         try:
