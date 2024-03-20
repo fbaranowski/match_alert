@@ -1,10 +1,15 @@
 from django.db import models
+from django.utils.text import slugify
 
 
 class League(models.Model):
     name = models.CharField(max_length=100)
-    href_str = models.TextField()
-    season = models.CharField(max_length=7, default="2023/24")
+    slug = models.SlugField(default="", null=False)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -13,9 +18,13 @@ class League(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=75)
     short_name = models.CharField(max_length=30, null=True, blank=True)
-    league = models.OneToOneField(
-        League, on_delete=models.CASCADE, related_name="teams"
-    )
+    team_slug = models.SlugField(default="", null=False)
+    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="teams")
+
+    def save(self, *args, **kwargs):
+        if not self.team_slug:
+            self.team_slug = slugify(self.name)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -33,9 +42,7 @@ class LeagueTable(models.Model):
     goals_difference = models.SmallIntegerField()
     points = models.SmallIntegerField()
     form = models.CharField(max_length=5)
-    league = models.OneToOneField(
-        League, on_delete=models.CASCADE, related_name="table"
-    )
+    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="table")
 
     def __str__(self):
         return f"{self.league} Table"

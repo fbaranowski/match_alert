@@ -2,24 +2,49 @@
 
 {% block nav %}
     {% for league in leagues %}
-        <li><a class="dropdown-item" href="{% url league.href_str %}">{{ league.name }}</a></li>
+        <li><a class="dropdown-item" href="{% url 'league_teams' slug=league.slug %}">{{ league.name }}</a></li>
     {% endfor %}
 {% endblock %}
 
 {% block content %}
     <div class="content-section">
-        <img class="rounded-circle account-img" src="{{ profile.image.url }}" style="width:200px;height:200px;margin-bottom:50px;">
+        <img class="rounded-circle account-img" src="{{ profile.image.url }}">
 
-        <div class="account-info" style="margin-right:250px">
-            <h2 class="account-heading" style="text-align:center;color:#a2ed56;font-size:2.5rem;margin-top:10px;">{{ profile.user.username }}</h2>
-            <p>E-mail: {{ user.email }}</p>
-            <p>Full name: {{ user.first_name }} {{ user.last_name }}</p>
+        <div class="account-info">
+            <h2 class="account-heading">{{ profile.user.username }}</h2>
+            <p class="user-info-p">E-mail:</p>
+            <p>{{ user.email }}</p>
+            <p class="user-info-p">Full name:</p>
+            <p>{{ user.first_name }} {{ user.last_name }}</p>
         </div>
+        {% if profile.leagues.exists %}
+        <div class="border-top pt-3">
+            <p class="follow-header">Followed leagues:</p>
+            <ul>
+            {% for league in profile.leagues.all %}
+                <li><a class="ml-2" href="{% url 'league_table' slug=league.slug %}">{{ league.name }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% if profile.teams.exists %}
+        <div class="border-top pt-3">
+            <p class="follow-header">Followed teams:</p>
+            <ul>
+            {% for team in profile.teams.all %}
+                <li><a class="ml-2" href="{% url 'team_fixtures' team_slug=team.team_slug %}">{{ team.name }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
 
         <div class="border-top pt-3">
+        <p class="follow-header">Available options:</p>
         <small>
             <a class="ml-2" href="{% url 'update_profile' user.pk %}">Update Profile</a><br>
-            <a class="ml-2" href="{% url 'change_password' %}">Change Password</a>
+            <a class="ml-2" href="{% url 'change_password' %}">Change Password</a><br>
+            <a class="ml-2" href="{% url 'update_leagues' user.pk %}">Update followed leagues</a><br>
+            <a class="ml-2" href="{% url 'update_teams' user.pk %}">Update followed teams</a>
         </small>
         </div>
     </div>

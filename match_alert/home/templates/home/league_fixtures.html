@@ -1,0 +1,29 @@
+{% extends 'home/base.html' %}
+{% block nav %}
+    {% for league in leagues %}
+        <li><a class="dropdown-item" href="{% url 'league_teams' slug=league.slug %}">{{ league.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="content-section">
+        <h1>{{ league.name }} Fixtures</h1>
+        <div class="button-container">
+            <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_table' slug=league.slug %}'">Table</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_results' slug=league.slug %}'">Results</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_teams' slug=league.slug %}'">Teams</button>
+        </div>
+        {% for date, fixtures in fixtures_dict.items %}
+            <strong class="strong-date">{{ date|date:"l, j F o" }}</strong><br>
+                {% for fixture in fixtures %}
+                    <table class="matches-table">
+                        <tr>
+                            <td class="time-td">{{ fixture.time|time:"G:i" }} CET</td>
+                            <td class="team1-td">{{ fixture.team_1_name }}</td>
+                            <td class="vs-td">vs</td>
+                            <td class="team2-td">{{ fixture.team_2_name }}</td>
+                        </tr>
+                    </table>
+                {% endfor %}
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

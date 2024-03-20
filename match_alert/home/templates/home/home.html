@@ -1,14 +1,19 @@
 {% extends 'home/base.html' %}
 {% block nav %}
     {% for league in leagues %}
-        <li><a class="dropdown-item" href="{% url league.href_str %}">{{ league.name }}</a></li>
+        <li><a class="dropdown-item" href="{% url 'league_teams' slug=league.slug %}">{{ league.name }}</a></li>
     {% endfor %}
 {% endblock %}
 
 {% block content %}
-    <h1>MatchAlert</h1>
-    <p id="description">This is MatchAlert app which allows to check standings, results and schedules of top 5 european leagues This is MatchAlert app which allows to check standings, results and schedules of top 5 european leagues This is MatchAlert app which allows to check standings, results and schedules of top 5 european leagues This is MatchAlert app which allows to check standings, results and schedules of top 5 european leagues This is MatchAlert app which allows to check standings, results and schedules of top 5 european leagues</p>
-    {% for league in leagues %}
-    <p><a href="{% url league.href_str %}">{{ league.name }}</a></p>
-    {% endfor %}
+    <div class="content-section">
+        <h1>MatchAlert</h1>
+        <p id="description">This is MatchAlert app which allows to check standings, results and schedules of top 5 european leagues.</p>
+        <hr>
+        <div class="leagues-div">
+        {% for league in leagues %}
+            <button class="btn btn-outline-info btn-sm btn-home" onclick="window.location.href='{% url 'league_teams' slug=league.slug %}'">{{ league.name }}</button><br>
+        {% endfor %}
+        </div>
+    </div>
 {% endblock %}

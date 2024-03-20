@@ -1,0 +1,27 @@
+{% extends 'home/base.html' %}
+{% block nav %}
+    {% for league in leagues %}
+        <li><a class="dropdown-item" href="{% url 'league_teams' slug=league.slug %}">{{ league.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="content-section">
+        <h1>{{ team.name }} Fixtures</h1>
+        <div class="button-container">
+            <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'league_teams' slug=team.league.slug %}'">Back to {{ team.league.name }}</button> <button class="btn btn-outline-info btn-lg btn-custom" onclick="window.location.href='{% url 'team_results' team_slug=team.team_slug %}'">Results</button>
+        </div>
+        {% for fixture in ordered_fixtures %}
+            <strong class="strong-date">{{ fixture.date|date:"l, j F o" }}</strong><br>
+            <table class="matches-table">
+                <tr>
+                    <td class="time-td">{{ fixture.time|time:"G:i" }} CET</td>
+                    <td class="team1-td">{{ fixture.team_1_name }}</td>
+                    <td class="vs-td">vs</td>
+                    <td class="team2-td">{{ fixture.team_2_name }}</td>
+                </tr>
+            </table>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

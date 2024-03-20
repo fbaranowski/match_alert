@@ -1,4 +1,6 @@
+import re
 import requests
+from datetime import datetime
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -7,10 +9,9 @@ from selenium.common.exceptions import (
     NoSuchElementException,
     ElementClickInterceptedException,
 )
-import re
-from datetime import datetime
-from attributes import WebsiteAttributes, RegexPatterns
-from objects import Team, TableLabels, Fixture, Result
+from selenium.webdriver.firefox.options import Options
+from match_scraper.logic.attributes import WebsiteAttributes, RegexPatterns, Validator
+from match_scraper.logic.objects import Team, TableLabels, Fixture, Result
 
 
 class Scraper:
@@ -69,9 +70,10 @@ class Scraper:
         """
         Function which scrapes league results from given url
         """
-        options = webdriver.FirefoxOptions()
+        driver_path = "http://firefox:4444"
+        options = Options()
         options.add_argument("-headless")
-        driver = webdriver.Firefox(options=options)
+        driver = webdriver.Remote(command_executor=driver_path, options=options)
         driver.get(f"https://www.theguardian.com/football/{url_league_name}/results")
 
         try:
@@ -108,7 +110,8 @@ class Scraper:
             formatted_day = [day.strip() for day in days]
             date = formatted_day[0]
             date = datetime.strptime(date, "%A " "%d " "%B " "%Y").date()
-            if date < datetime(2023, 7, 1).date():
+
+            if not Validator.date_validator(date_to_validate=date):
                 break
 
             for i in range(1, len(formatted_day)):
@@ -131,9 +134,10 @@ class Scraper:
         """
         Function which scrapes league fixtures from given url
         """
-        options = webdriver.FirefoxOptions()
+        driver_path = "http://firefox:4444"
+        options = Options()
         options.add_argument("-headless")
-        driver = webdriver.Firefox(options=options)
+        driver = webdriver.Remote(command_executor=driver_path, options=options)
         driver.get(f"https://www.theguardian.com/football/{url_league_name}/fixtures")
 
         try:
