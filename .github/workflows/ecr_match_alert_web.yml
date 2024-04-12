@@ -27,10 +27,26 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
       
-      - name: Tag and push image to Amazon ECR
+      - name: Build, tag and push images to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: match-alert-images
+          ECR_REPOSITORY_WEB: match-alert-images
+          ECR_REPOSITORY_DB: match-alert-postgres-db
+          ECR_REPOSITORY_CELERY_WORKER: match-alert-celery-worker
+          ECR_REPOSITORY_CELERY_BEAT: match-alert-celery-beat
+          ECR_REPOSITORY_REDIS: match-alert-redis
+          ECR_REPOSITORY_FIREFOX_GECKODRIVER: match-alert-firefox-geckodriver
           IMAGE_TAG: latest
         run:
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker build -t match_alert-web ../../Dockerfile
+          docker build -t match_alert-db ../../Dockerfile
+          docker build -t match_alert-worker ../../Dockerfile
+          docker build -t match_alert-celery-beat ../../Dockerfile
+          docker build -t match_alert-redis ../../Dockerfile
+          docker build -t match_alert-firefox ../../Dockerfile
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_WEB:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_DB:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_CELERY_WORKER:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_CELERY_BEAT:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_REDIS:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_FIREFOX_GECKODRIVER:$IMAGE_TAG
