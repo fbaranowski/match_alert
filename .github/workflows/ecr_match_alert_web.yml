@@ -37,7 +37,7 @@ jobs:
           ECR_REPOSITORY_REDIS: match-alert-redis
           ECR_REPOSITORY_FIREFOX_GECKODRIVER: match-alert-firefox-geckodriver
           IMAGE_TAG: latest
-        run:
+        run: |
           docker build -t match_alert-web ../../Dockerfile
           docker build -t match_alert-db ../../Dockerfile
           docker build -t match_alert-worker ../../Dockerfile
