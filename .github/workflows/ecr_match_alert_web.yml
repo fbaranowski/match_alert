@@ -1,0 +1,52 @@
+name: Deploy match_alert-web container to ECR
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+
+  push:
+    name: Push Image
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+  
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+  
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      
+      - name: Build, tag and push images to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY_WEB: match-alert-images
+          ECR_REPOSITORY_DB: match-alert-postgres-db
+          ECR_REPOSITORY_CELERY_WORKER: match-alert-celery-worker
+          ECR_REPOSITORY_CELERY_BEAT: match-alert-celery-beat
+          ECR_REPOSITORY_REDIS: match-alert-redis
+          ECR_REPOSITORY_FIREFOX_GECKODRIVER: match-alert-firefox-geckodriver
+          IMAGE_TAG: latest
+        run:
+          docker build -t match_alert-web ../../Dockerfile
+          docker build -t match_alert-db ../../Dockerfile
+          docker build -t match_alert-worker ../../Dockerfile
+          docker build -t match_alert-celery-beat ../../Dockerfile
+          docker build -t match_alert-redis ../../Dockerfile
+          docker build -t match_alert-firefox ../../Dockerfile
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_WEB:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_DB:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_CELERY_WORKER:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_CELERY_BEAT:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_REDIS:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_FIREFOX_GECKODRIVER:$IMAGE_TAG
