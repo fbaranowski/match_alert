@@ -41,12 +41,12 @@ jobs:
           ECR_REPOSITORY_FIREFOX_GECKODRIVER: match-alert-firefox-geckodriver
           IMAGE_TAG: latest
         run: |
-          docker build -t match_alert-web ../../Dockerfile
-          docker build -t match_alert-db ../../Dockerfile
-          docker build -t match_alert-worker ../../Dockerfile
-          docker build -t match_alert-celery-beat ../../Dockerfile
-          docker build -t match_alert-redis ../../Dockerfile
-          docker build -t match_alert-firefox ../../Dockerfile
+          docker build -t match_alert-web .
+          docker build -t match_alert-db .
+          docker build -t match_alert-worker .
+          docker build -t match_alert-celery-beat .
+          docker build -t match_alert-redis .
+          docker build -t match_alert-firefox .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_WEB:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_DB:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_CELERY_WORKER:$IMAGE_TAG
