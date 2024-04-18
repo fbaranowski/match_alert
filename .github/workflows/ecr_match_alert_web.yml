@@ -47,6 +47,12 @@ jobs:
           docker build -t match_alert-celery-beat .
           docker build -t match_alert-redis .
           docker build -t match_alert-firefox .
+          docker tag match_alert-web:latest 992382709366.dkr.ecr.eu-central-1.amazonaws.com/match-alert-images:latest
+          docker tag match_alert-db:latest 992382709366.dkr.ecr.eu-central-1.amazonaws.com/match-alert-postgres-db:latest
+          docker tag match_alert-worker:latest 992382709366.dkr.ecr.eu-central-1.amazonaws.com/match-alert-celery-worker:latest
+          docker tag match_alert-celery-beat:latest 992382709366.dkr.ecr.eu-central-1.amazonaws.com/match-alert-celery-beat:latest
+          docker tag match_alert-redis:latest 992382709366.dkr.ecr.eu-central-1.amazonaws.com/match-alert-redis:latest
+          docker tag match_alert-firefox:latest 992382709366.dkr.ecr.eu-central-1.amazonaws.com/match-alert-firefox-geckodriver:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_WEB:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_DB:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_CELERY_WORKER:$IMAGE_TAG
