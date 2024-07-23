@@ -6,6 +6,7 @@ class WebsiteAttributes:
     BUTTON_CLASS_NAME = "football-matches__show-more"
     FIXTURES_RESULTS_CONTAINER_CLASS = "football-matches__container"
     LEAGUE_CLASS_NAME = "football-matches__heading"
+    # LEAGUE_CLASS_NAME = 'table__caption'
     TEAMS_LIST_CLASS = "dcr-12fqtb6"
     LEAGUE_CONTAINER_ID = {
         "premier_league": "container-premier-league",

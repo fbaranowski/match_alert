@@ -14,23 +14,41 @@ queue_app = Celery(
 )
 
 queue_app.conf.beat_schedule = {
-    "scrape-every-hour": {
-        "task": "match_alert.celery_app.scrape_fixtures_results_tables",
-        "schedule": 1800,
-    },
     "scrape-only-once-in-august": {
         "task": "match_alert.celery_app.scrape_teams",
         "schedule": crontab("0", "0", day_of_month="1", month_of_year="8"),
+    },
+    "scrape-results": {
+        "task": "match_alert.celery_app.scrape_results",
+        "schedule": 1800
+    },
+    "scrape-fixtures": {
+        "task": "match_alert.celery_app.scrape_fixtures",
+        "schedule": 3600
+    },
+    "scrape-tables": {
+        "task": "match_alert.celery_app.scrape_tables",
+        "schedule": 900
     },
 }
 
 
 @queue_app.task
-def scrape_fixtures_results_tables():
+def scrape_results():
+    db_handler = DatabaseHandler()
+    db_handler.fill_result_model()
+
+
+@queue_app.task
+def scrape_fixtures():
+    db_handler = DatabaseHandler()
+    db_handler.fill_fixture_model()
+
+
+@queue_app.task
+def scrape_tables():
     db_handler = DatabaseHandler()
     db_handler.fill_table_model()
-    db_handler.fill_fixture_model()
-    db_handler.fill_result_model()
 
 
 @queue_app.task
