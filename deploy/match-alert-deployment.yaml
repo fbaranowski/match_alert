@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: match-alert
+  labels:
+    app: match-alert
+    group: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: match-alert
+  template:
+    metadata:
+      labels:
+        app: match-alert
+        group: backend
+    spec:
+      containers:
+        - name: match-alert-container
+          image: match-alert-img
+          imagePullPolicy: Never
+          command: ["sh", "-c"]
+          args: ["python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+          ports:
+            - containerPort: 8000
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: SECRET_KEY
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
