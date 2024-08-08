@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: match-alert
+  labels:
+    group: backend
+spec:
+  type: ClusterIP
+  selector:
+    app: match-alert
+  ports:
+    - port: 8000
+      targetPort: 8000

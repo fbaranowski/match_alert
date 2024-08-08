@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  labels:
+    app: celery-worker
+    group: celery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+        group: celery
+    spec:
+      containers:
+        - name: celery-worker-container
+          image: match-alert-img
+          imagePullPolicy: Never
+          command: ["celery", "-A", "match_alert.celery_app:queue_app", "worker", "-l", "INFO"]
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "500m"

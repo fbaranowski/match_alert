@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firefox
+  labels:
+    app: firefox
+    group: scraper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: firefox
+  template:
+    metadata:
+      labels:
+        app: firefox
+        group: scraper
+    spec:
+      containers:
+        - name: firefox-container
+          image: blueimp/geckodriver
+          ports:
+            - containerPort: 4444
+          env:
+            - name: DISABLE_X11
+              value: "true"
+            - name: ENABLE_VNC
+              value: "true"
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

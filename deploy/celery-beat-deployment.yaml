@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-beat
+  labels:
+    app: celery-beat
+    group: celery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-beat
+  template:
+    metadata:
+      labels:
+        app: celery-beat
+        group: celery
+    spec:
+      containers:
+        - name: celery-beat-container
+          image: match-alert-img
+          imagePullPolicy: Never
+          command: ["celery", "-A", "match_alert.celery_app:queue_app", "beat", "-l", "INFO", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"]
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
